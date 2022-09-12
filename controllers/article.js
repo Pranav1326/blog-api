@@ -5,16 +5,17 @@ const userAuth = require('../utils/userAuth');
 // Create an new article
 exports.postCreateArticle = async (req, res, next) => {
     const authUser = await userAuth(req);
-    if(authUser._id === req.body.userId && authUser.username === req.body.author){
+    if(authUser._id === req.body.authorId && authUser.username === req.body.author){
         try{
             const newArticle = new Article({
                 title: req.body.title,
                 content: req.body.content,
                 author: req.body.author,
+                authorId: req.body.authorId,
                 tags: req.body.tags
             });
             const article = await newArticle.save();
-            const user = await User.findOne({_id: req.body.userId});
+            const user = await User.findOne({_id: req.body.authorId});
             const updatedUser = await User.findByIdAndUpdate(authUser._id, {
                 articles : [...user.articles ,article._id]
             },{new: true});

@@ -4,12 +4,12 @@ Base URL: http://localhost:5000/api/
 
 1. Create User
 path: '/user/register'
-req.data: body.username, body.email, body.password
+req.data: body  {username, email, password}
 res: new user details
 
 2. Login User
 path: '/user/login'
-req.data: username, password
+req.data: body{username, password}
 res: userInfo, token
 
 3. Update User
@@ -58,7 +58,7 @@ res: admin-user
 
 1. Create Article
 path: '/articles/create'
-req.data: auth-token, body.userId, body{title, content, author, tags}
+req.data: auth-token, body.authorId, body{title, content, author, tags}
 res: new article 
 
 2. Update Article

@@ -29,7 +29,19 @@ var userSchema = new mongoose.Schema({
     comments: {
         type: Array,
         default: []
-    }
+    },
+    name:{
+        type: String,
+    },
+    location:{
+        type: String,
+    },
+    bio:{
+        type: String,
+    },
+    work:{
+        type: String,
+    },
 },{timestamps: true});
 
 //Export the model

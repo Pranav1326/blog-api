@@ -1,4 +1,5 @@
 const auth = require('../utils/auth');
+const userAuth = require('../utils/userAuth');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 
@@ -38,10 +39,10 @@ router.put('/update/:id',auth ,async (req, res) => {
 router.delete('/delete/:id',auth , async (req, res) => {
     const authUser = await userAuth(req);
     if(authUser._id === req.body.userId && req.body.userId === req.params.id){
-        const user = await User.findOne({_id : req.params.id});
+        const user = await User.findOne({_id : req.body.userId});
         if(user){
             try{
-                await User.findOneAndDelete(req.params.id);
+                await User.findOneAndDelete({_id: req.body.userId});
                 res.status(200).json(`User ${req.body.username} deleted`);
             }
             catch(err){
@@ -60,7 +61,7 @@ router.delete('/delete/:id',auth , async (req, res) => {
 // Get single user
 router.get('/:id', async (req, res) => {
     try{
-        const user = await User.findById(req.params.id);
+        const user = await User.findById({_id: req.params.id});
         if(user){
             const {password, ...otherInfo} = user._doc;
             res.status(200).json(otherInfo);

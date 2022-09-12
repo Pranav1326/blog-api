@@ -12,6 +12,12 @@ var articleSchema = new mongoose.Schema({
     author:{
         type:String,
         required:true,
+        unique:true
+    },
+    authorId:{
+        type:String,
+        required:true,
+        unique: true
     },
     tags:{
         type:Array,
