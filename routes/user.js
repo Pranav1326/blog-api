@@ -25,10 +25,6 @@ router.put('/resetpassword', userController.resetPassword);
 router.put('/update/:id',auth ,async (req, res) => {
     const authUser = await userAuth(req);
     if(authUser._id === req.body.userId && req.body.userId === req.params.id){
-        if(req.body.password){
-            const salt = await bcrypt.genSalt(10);
-            req.body.password = await bcrypt.hash(req.body.password, salt);
-        }
         try{
             const updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: req.body
