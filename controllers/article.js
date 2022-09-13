@@ -33,15 +33,30 @@ exports.postCreateArticle = async (req, res, next) => {
 
 // Fetch all the articles
 exports.getArticles = async (req, res) => {
+    const username = req.query.user;
+    const tag = req.query.tag;
+    const title = req.query.title;
     try{
-        const articles = await Article.find();
+        let articles; 
+        if(username){
+            articles = await Article.find({author: username});
+        }
+        else if(tag){
+            articles = await Article.find({tags: {
+                $in: [tag]
+            }});
+        }
+        else if(title){
+            articles = await Article.find({title});
+        }
+        else{
+            articles = await Article.find();
+        }
 
         if(!articles){
             !articles && res.status(400).json(`No Articles found!`);
         }
-        else{
-            res.status(200).json(articles);
-        }
+        res.status(200).json(articles);
     }
     catch(err){
         res.status(500).json(err);

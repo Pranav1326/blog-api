@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const multer = require('multer');
 
 const app = express();
 app.use(cors());
@@ -10,6 +11,20 @@ app.use(express.json());
 
 // DB connection
 const dbConnection = require('./utils/db');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  }
+});
+
+const upload = multer({storage: storage});
+app.post("/api/imageupload", upload.single("file"), (req, res) => {
+  res.status(200).json("File uploaded Successfully.");
+});
 
 // Routes
 const userRoute = require('./routes/user');

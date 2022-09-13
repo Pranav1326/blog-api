@@ -12,17 +12,19 @@ path: '/user/login'
 req.data: body{username, password}
 res: userInfo, token
 
-3. Update User
+3. Forgot Password
+
+4. Update User
 path: '/user/update/:id'
 req.data: auth-token, req.body.userId (user_id), req.param.id (user_id), req.body.password
 res: updatedUser 
 
-4. Delete User
+5. Delete User
 path: '/user/delete/:id'
-req.data: req.body.userId (user_id), req.param.id (user_id), auth-token, req.body.password, req.body.username
+req.data: req.body.userId (user_id), req.param.id (user_id), auth-token, req.body.username
 res: username
 
-5. Get Single User
+6. Get Single User
 path: '/user/:id'
 req.data: req.param.id (user_id)
 res: user

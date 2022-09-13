@@ -12,6 +12,12 @@ router.post('/register', userController.postUserRegister);
 // Login User
 router.post('/login', userController.postUserLogin);
 
+// Forgot Password
+router.post('/forgotpassword', userController.forgotPassword);
+
+// Reset Forgot Password
+router.put('/resetpassword', userController.resetPassword);
+
 // UPDATE User
 router.put('/update/:id',auth ,async (req, res) => {
     const authUser = await userAuth(req);
@@ -36,7 +42,7 @@ router.put('/update/:id',auth ,async (req, res) => {
 });
 
 // DELETE User
-router.delete('/delete/:id',auth , async (req, res) => {
+router.delete('/delete/:id', auth, async (req, res) => {
     const authUser = await userAuth(req);
     if(authUser._id === req.body.userId && req.body.userId === req.params.id){
         const user = await User.findOne({_id : req.body.userId});
