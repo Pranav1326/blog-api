@@ -96,7 +96,7 @@ exports.forgotPassword = async (req, res) => {
 	                to: `${req.body.email}`,
 	                subject: "Forgot Password Instructions of blog website",
 	                text: ``,
-	                html: `Hello ${req.body.email}\nSomeone has requested a link to change your password. You can do this through the following link.\n\n<a href='http://localhost:5000/api/user/resetpassword'>Change my password</a>\n<p>If you didn't request this, please ignore this email.</p>\n<p>Your password won't change until you access the link above and create a new one.</p>`
+	                html: `Hello ${req.body.email}\nSomeone has requested a link to change your password. You can do this through the following link.\n\n<a href='http://localhost:3000/api/user/resetpassword'>Change my password</a>\n<p>If you didn't request this, please ignore this email.</p>\n<p>Your password won't change until you access the link above and create a new one.</p>`
 	            });
 	        }
 	        else{
