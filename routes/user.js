@@ -15,6 +15,9 @@ router.post('/login', userController.postUserLogin);
 // Forgot Password
 router.post('/forgotpassword', userController.forgotPassword);
 
+// otp auth
+router.post('/otpauth', userController.otpAuth);
+
 // Reset Forgot Password
 router.put('/resetpassword', userController.resetPassword);
 

@@ -82,21 +82,23 @@ exports.postUserLogin = async (req, res) => {
 }
 
 // Forgot Password
+let otp;
 exports.forgotPassword = async (req, res) => {
     try {
-	    const email = req.body.email;
+        const email = req.body.email;
 	    const checkUser = await User.findOne({email: email});
 	    if(!checkUser){
-	        res.status(404).json("User does not exist! Please create new user.");
+            res.status(404).json("User does not exist! Please create new user.");
 	    }
 	    else{
-	        if(checkUser.email === email){
+            if(checkUser.email === email){
+                otp = Math.floor(Math.random()*10000);
 	            var info = await transporter.sendMail({
 	                from: 'mernstack.blog@gmail.com',
 	                to: `${req.body.email}`,
 	                subject: "Forgot Password Instructions of blog website",
 	                text: ``,
-	                html: `Hello ${req.body.email}\nSomeone has requested a link to change your password. You can do this through the following link.\n\n<a href='http://localhost:3000/api/user/resetpassword'>Change my password</a>\n<p>If you didn't request this, please ignore this email.</p>\n<p>Your password won't change until you access the link above and create a new one.</p>`
+                    html: `Hello ${req.body.email}<p>Someone has requested a link to change your password.</p><p>Here your one time password(OTP) <b>${otp}</b></p>`
 	            });
 	        }
 	        else{
@@ -110,19 +112,19 @@ exports.forgotPassword = async (req, res) => {
 	        }
 	    }
     } catch (error) {
-        console.log(error);
         res.status(500).json(error);
     }
 }
 
+// Reset Password
 exports.resetPassword = async (req, res) => {
     try {
         const user = await User.findOne({username: req.body.username});
         !user && res.status(404).json('User does not exist!');
-
+        
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
+        
         if(user){
             const updatedUser = await User.findByIdAndUpdate(user._id, {
                 $set: req.body,
@@ -133,5 +135,16 @@ exports.resetPassword = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
+    }
+}
+
+// OTP Auth
+exports.otpAuth = async (req, res) => {
+    const otpReq = req.body.otp;
+    if(Number(otpReq) === otp){
+        res.status(200).json("Authenticated");
+    }
+    else{
+        res.status(400).json("Invalid OTP!");
     }
 }
