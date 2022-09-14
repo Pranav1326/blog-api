@@ -93,13 +93,14 @@ exports.forgotPassword = async (req, res) => {
 	    else{
             if(checkUser.email === email){
                 otp = Math.floor(Math.random()*10000);
-	            var info = await transporter.sendMail({
+	            const info = await transporter.sendMail({
 	                from: 'mernstack.blog@gmail.com',
 	                to: `${req.body.email}`,
 	                subject: "Forgot Password Instructions of blog website",
 	                text: ``,
                     html: `Hello ${req.body.email}<p>Someone has requested a link to change your password.</p><p>Here your one time password(OTP) <b>${otp}</b></p>`
 	            });
+                console.log(info);
 	        }
 	        else{
 	            res.status(404).json("User does not exist! Please create new user.");
@@ -112,7 +113,7 @@ exports.forgotPassword = async (req, res) => {
 	        }
 	    }
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json("Could not send the mail!");
     }
 }
 
