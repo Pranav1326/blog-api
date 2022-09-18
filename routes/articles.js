@@ -50,7 +50,7 @@ router.delete('/delete/:id', auth, async (req, res) => {
             }
         }
         else{
-            res.status(401).json(`Article not found!`);
+            res.status(404).json(`Article not found!`);
         }
     }
     else{
