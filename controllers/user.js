@@ -84,6 +84,7 @@ exports.postUserLogin = async (req, res) => {
 // Forgot Password
 let otp;
 exports.forgotPassword = async (req, res) => {
+    let info;
     try {
         const email = req.body.email;
 	    const checkUser = await User.findOne({email: email});
@@ -93,14 +94,13 @@ exports.forgotPassword = async (req, res) => {
 	    else{
             if(checkUser.email === email){
                 otp = Math.floor(Math.random()*10000);
-	            const info = await transporter.sendMail({
+	            info = await transporter.sendMail({
 	                from: 'mernstack.blog@gmail.com',
 	                to: `${req.body.email}`,
 	                subject: "Forgot Password Instructions of blog website",
 	                text: ``,
                     html: `Hello ${req.body.email}<p>Someone has requested a link to change your password.</p><p>Here your one time password(OTP) <b>${otp}</b></p>`
 	            });
-                console.log(info);
 	        }
 	        else{
 	            res.status(404).json("User does not exist! Please create new user.");
@@ -108,7 +108,7 @@ exports.forgotPassword = async (req, res) => {
 	        if(info !== null){
 	            res.status(200).json("mail has been sent!");
 	        }
-	        else{
+	        if(!info){
 	            res.status(500).json("Could not send the mail!");
 	        }
 	    }
@@ -120,7 +120,7 @@ exports.forgotPassword = async (req, res) => {
 // Reset Password
 exports.resetPassword = async (req, res) => {
     try {
-        const user = await User.findOne({username: req.body.username});
+        const user = await User.findOne({email: req.body.email});
         !user && res.status(404).json('User does not exist!');
         
         const salt = await bcrypt.genSalt(10);
@@ -131,6 +131,7 @@ exports.resetPassword = async (req, res) => {
                 $set: req.body,
                 password: hashedPassword
             },{new: true});
+            otp=null;
             res.status(200).json(updatedUser);
         }
     } catch (error) {
