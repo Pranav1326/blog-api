@@ -83,6 +83,15 @@ exports.postUserLogin = async (req, res) => {
 
 // Forgot Password
 let otp;
+
+const generateOtp = () => {
+    otptemp = Math.floor(Math.random()*10000);
+    if(otptemp.toString().length<4){
+        generateOtp();
+    }
+    return otptemp;
+}
+
 exports.forgotPassword = async (req, res) => {
     let info;
     try {
@@ -93,7 +102,7 @@ exports.forgotPassword = async (req, res) => {
 	    }
 	    else{
             if(checkUser.email === email){
-                otp = Math.floor(Math.random()*10000);
+                otp = generateOtp();
 	            info = await transporter.sendMail({
 	                from: 'mernstack.blog@gmail.com',
 	                to: `${req.body.email}`,
