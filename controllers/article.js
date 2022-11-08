@@ -1,5 +1,6 @@
 const Article = require('../models/Article');
 const User = require('../models/User');
+const Tags = require('../models/Tags');
 const userAuth = require('../utils/userAuth');
 
 // Create an new article
@@ -15,6 +16,19 @@ exports.postCreateArticle = async (req, res, next) => {
                 tags: req.body.tags
             });
             const article = await newArticle.save();
+            const isNewTags = newArticle.tags.forEach(async (tag, i) => {
+                const foundTag = await Tags.findOne({tag});
+                console.log(foundTag);
+                if(foundTag){
+                    return;
+                }
+                else{
+                    const newTag = new Tags({
+                        tag: tag
+                    });
+                }
+            });
+            // isNewTags();
             const user = await User.findOne({_id: req.body.authorId});
             const updatedUser = await User.findByIdAndUpdate(authUser._id, {
                 articles : [...user.articles ,article._id]

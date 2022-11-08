@@ -5,6 +5,7 @@ const router = require('express').Router();
 const Article = require('../models/Article');
 const articleController = require('../controllers/article');
 const User = require('../models/User');
+const Tags = require('../models/Tags');
 
 // Create an Article
 router.post('/create', auth, articleController.postCreateArticle);

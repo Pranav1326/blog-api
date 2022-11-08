@@ -24,8 +24,8 @@ exports.postTags = async (req, res) => {
 
 exports.deleteTags = async (req, res) => {
     try {
-        const tag = Tags.findOne({tag: req.body.tag});
-        console.log(tag.find());
+        const tag = await Tags.findOne({tag: req.body.tag});
+        console.log(tag);
     } catch (error) {
         res.status(500).json(error);
     }
