@@ -42,11 +42,6 @@ const adminRoute = require('./routes/admin');
 const articleRoute = require('./routes/articles');
 const tagRoute = require('./routes/tags');
 
-// Home Test Route
-app.use("/", (req, res) => {
-  res.status(200).json({ message: "This is home test route." });
-});
-
 // User route
 app.use("/api/user", userRoute);
 
@@ -58,6 +53,11 @@ app.use("/api/articles", articleRoute);
 
 // Tag route
 app.use("/api/tags", tagRoute);
+
+// Home Test Route
+app.use("/", (req, res) => {
+  res.status(200).json({ message: "This is home test route." });
+});
 
 app.listen(port, () => {
   console.log(`Server started on http://localhost:${port}/`);
