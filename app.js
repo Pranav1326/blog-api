@@ -55,5 +55,5 @@ app.use("/api/articles", articleRoute);
 app.use("/api/tags", tagRoute);
 
 app.listen(port, () => {
-  console.log(`Server started on http://localhost:5000/`);
+  console.log(`Server started on http://localhost:${port}/`);
 });
