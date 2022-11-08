@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use('/images', express.static('images'));
 app.use(express.json());
 
-const port = process.env.port || 5000;
+const PORT = process.env.port || 5000;
 
 // DB connection
 const dbConnection = require('./utils/db');
@@ -59,6 +59,6 @@ app.use("/", (req, res) => {
   res.status(200).json({ message: "This is home test route." });
 });
 
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}/`);
+app.listen(PORT, () => {
+  console.log(`Server started on http://localhost:${PORT}/`);
 });
