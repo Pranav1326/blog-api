@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use('/images', express.static('images'));
 app.use(express.json());
 
-const PORT = process.env.port || 5000;
+const PORT = process.env.PORT || 5000;
 
 // DB connection
 const dbConnection = require('./utils/db');
