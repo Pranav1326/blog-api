@@ -13,7 +13,8 @@ exports.postCreateArticle = async (req, res, next) => {
                 content: req.body.content,
                 author: req.body.author,
                 authorId: req.body.authorId,
-                tags: req.body.tags
+                tags: req.body.tags,
+                image: req.body.image
             });
             const article = await newArticle.save();
             const isNewTags = newArticle.tags.forEach(async (tag, i) => {

@@ -24,6 +24,9 @@ var articleSchema = new mongoose.Schema({
     comments: {
         type: Array,
         default: []
+    },
+    image: {
+        type: String
     }
 },{timestamps: true});
 
