@@ -3,77 +3,93 @@ Base URL: http://localhost:5000/api/
 ============== User Routes ==============
 
 1. Create User
-path: '/user/register'
-req.data: body  {username, email, password}
+path: '/user/register',
+req.data: body  {username, email, password},
 res: new user details
 
 2. Login User
-path: '/user/login'
-req.data: body{username, password}
+path: '/user/login',
+req.data: body{username, password},
 res: userInfo, token
 
 3. Forgot Password
+path: '/userforgotpassword',
+req.data: body{email},
+res: [
+    {
+        status: 404,
+        message: "User does not exist! Please create new user."
+    },
+    {
+        status: 500,
+        message: "Could not send the mail!"
+    },
+    {
+        status: 200,
+        message: "mail has been sent!"
+    }
+]
 
 4. Update User
-path: '/user/update/:id'
-req.data: auth-token, req.body.userId (user_id), req.param.id (user_id), req.body.password
+path: '/user/update/:id',
+req.data: auth-token, req.body.userId (user_id), req.param.id (user_id), req.body.password,
 res: updatedUser 
 
 5. Delete User
-path: '/user/delete/:id'
-req.data: req.body.userId (user_id), req.param.id (user_id), auth-token, req.body.username
+path: '/user/delete/:id',
+req.data: req.body.userId (user_id), req.param.id (user_id), auth-token, req.body.username,
 res: username
 
 6. Get Single User
-path: '/user/:id'
-req.data: req.param.id (user_id)
+path: '/user/:id',
+req.data: req.param.id (user_id),
 res: user
 
 ============== Admin Routes ==============
 
 1. Create Admin
-path: '/admin/register'
-req.data: body.username, body.email, body.password
+path: '/admin/register',
+req.data: body.username, body.email, body.password,
 res: new admin-user details
 
 2. Login Admin
-path: '/admin/login'
-req.data: username(admin), password
+path: '/admin/login',
+req.data: username(admin), password,
 res: adminInfo, token
 
 3. Update Admin
-path: '/admin/update/:id'
-req.data: auth-token, body{userId (user_id), username, password}, params{userId (user_id)}
+path: '/admin/update/:id',
+req.data: auth-token, body{userId (user_id), username, password}, params{userId (user_id)},
 res: updatedAdmin
 
 4. Delete Admin
-path: '/admin/delete/:id'
-req.data: auth-token, body{userId (user_id), username, password}, params{userId (user_id)}
+path: '/admin/delete/:id',
+req.data: auth-token, body{userId (user_id), username, password}, params{userId (user_id)},
 res: username
 
 5. Get Single Admin-User
-path: '/admin/:id'
-req.data: req.param.id (user_id)
+path: '/admin/:id',
+req.data: req.param.id (user_id),
 res: admin-user
 
 ============== Articles Routes ==============
 
 1. Create Article
-path: '/articles/create'
-req.data: auth-token, body.authorId, body{title, content, author, tags}
+path: '/articles/create',
+req.data: auth-token, body.authorId, body{title, content, author, tags},
 res: new article 
 
 2. Update Article
-path: '/articles/update/:id'
-req.data: auth-token, body{userId, author}, params{articleid (article_id)}, article_details_to_change{title, content, tags}
+path: '/articles/update/:id',
+req.data: auth-token, body{userId, author}, params{articleid (article_id)}, article_details_to_change{title, content, tags},
 res: updated article
 
 3. Delete Article
-path: '/articles/delete/:id'
-req.data: auth-token, body{userId (user_id), author, articleId}, params{articleId} 
+path: '/articles/delete/:id',
+req.data: auth-token, body{userId (user_id), author, articleId}, params{articleId} ,
 res: new article
 
 4. Get Single Article
-path: '/articles/:id'
-req.data: params{articleId} 
+path: '/articles/:id',
+req.data: params{articleId},
 res: article
