@@ -152,10 +152,15 @@ exports.resetPassword = async (req, res) => {
 // OTP Auth
 exports.otpAuth = async (req, res) => {
     const otpReq = req.body.otp;
-    if(Number(otpReq) === otp){
-        res.status(200).json("Authenticated");
-    }
-    else{
-        res.status(400).json("Invalid OTP!");
+    try {
+        if(Number(otpReq) === otp){
+            res.status(200).json("Authenticated");
+            otp = null;
+        }
+        else{
+            res.status(400).json("Invalid OTP!");
+        }
+    } catch (error) {
+        res.status(500).json(error);
     }
 }
