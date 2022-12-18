@@ -29,6 +29,7 @@ router.put('/update/:id',auth ,async (req, res) => {
             const updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: req.body
             },{new: true});
+            console.log(updatedUser);
             res.status(200).json(updatedUser);
         }
         catch(err){
@@ -55,7 +56,7 @@ router.delete('/delete/:id', auth, async (req, res) => {
             }
         }
         else{
-            res.status(401).json(`User not found!`);
+            res.status(404).json(`User not found!`);
         }
     }
     else{

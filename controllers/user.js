@@ -84,7 +84,7 @@ exports.postUserLogin = async (req, res) => {
 // Forgot Password
 let otp;
 
-const generateOtp = () => {
+const generateOtp = () => {;    
     otptemp = Math.floor(Math.random()*10000);
     if(otptemp.toString().length<4){
         generateOtp();
