@@ -22,64 +22,13 @@ router.post('/otpauth', userController.otpAuth);
 router.put('/resetpassword', userController.resetPassword);
 
 // UPDATE User
-router.put('/update/:id',auth ,async (req, res) => {
-    const authUser = await userAuth(req);
-    if(authUser._id === req.body.userId && req.body.userId === req.params.id){
-        try{
-            const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: req.body
-            },{new: true});
-            console.log(updatedUser);
-            res.status(200).json(updatedUser);
-        }
-        catch(err){
-            res.status(500).json(err);
-        }
-    }
-    else{
-        res.status(401).json(`You can update only your account!`);
-    }
-});
+router.put('/update/:id',auth, userController.updateUser);
 
 // DELETE User
-router.delete('/delete/:id', auth, async (req, res) => {
-    const authUser = await userAuth(req);
-    if(authUser._id === req.body.userId && req.body.userId === req.params.id){
-        const user = await User.findOne({_id : req.body.userId});
-        if(user){
-            try{
-                await User.findOneAndDelete({_id: req.body.userId});
-                res.status(200).json(`User ${req.body.username} deleted`);
-            }
-            catch(err){
-                res.status(500).json(err);
-            }
-        }
-        else{
-            res.status(404).json(`User not found!`);
-        }
-    }
-    else{
-        res.status(401).json(`You can Delete only your account!`);
-    }
-});
+router.delete('/delete/:id', auth, userController.deleteUser);
 
 // Get single user
-router.get('/:id', async (req, res) => {
-    try{
-        const user = await User.findById({_id: req.params.id});
-        if(user){
-            const {password, ...otherInfo} = user._doc;
-            res.status(200).json(otherInfo);
-        }
-        else{
-            res.status(400).json(`User ${req.body.username} not found`);
-        }
-    }
-    catch(err) {
-        res.status(500).json(err);
-    }
-}); 
+router.get('/:id', userController.getUser); 
 
 // Get all the users
 router.get('/', userController.getUsers);

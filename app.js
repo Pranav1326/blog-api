@@ -40,6 +40,7 @@ const userRoute = require('./routes/user');
 const adminRoute = require('./routes/admin');
 const articleRoute = require('./routes/articles');
 const tagRoute = require('./routes/tags');
+const commentRoute = require('./routes/comment');
 
 // User route
 app.use("/api/user", userRoute);
@@ -53,8 +54,11 @@ app.use("/api/articles", articleRoute);
 // Tag route
 app.use("/api/tags", tagRoute);
 
+// Comment route
+app.use(`/api/comment`, commentRoute);
+
 // Home Test Route
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({ message: "This is home test route." });
 });
 

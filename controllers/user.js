@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const userAuth = require('../utils/userAuth');
 
 let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -59,6 +60,23 @@ exports.getUsers = async (req, res) => {
     }
 }
 
+// Fetch a sinle user
+exports.getUser = async (req, res) => {
+    try{
+        const user = await User.findById({_id: req.params.id});
+        if(user){
+            const {password, ...otherInfo} = user._doc;
+            res.status(200).json(otherInfo);
+        }
+        else{
+            res.status(400).json(`User ${req.body.username} not found`);
+        }
+    }
+    catch(err) {
+        res.status(500).json(err);
+    }
+}
+
 // User Login
 exports.postUserLogin = async (req, res) => {
     try{
@@ -81,6 +99,49 @@ exports.postUserLogin = async (req, res) => {
     }
 }
 
+// Update User
+exports.updateUser = async (req, res) => {
+    const authUser = await userAuth(req);
+    if(authUser._id === req.body.userId && req.body.userId === req.params.id){
+        try{
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+                $set: req.body
+            },{new: true});
+            console.log(updatedUser);
+            res.status(200).json(updatedUser);
+        }
+        catch(err){
+            res.status(500).json(err);
+        }
+    }
+    else{
+        res.status(401).json(`You can update only your account!`);
+    }
+}
+
+// Delete User
+exports.deleteUser = async (req, res) => {
+    const authUser = await userAuth(req);
+    if(authUser._id === req.body.userId && req.body.userId === req.params.id){
+        const user = await User.findOne({_id : req.body.userId});
+        if(user){
+            try{
+                await User.findOneAndDelete({_id: req.body.userId});
+                res.status(200).json(`User ${req.body.username} deleted`);
+            }
+            catch(err){
+                res.status(500).json(err);
+            }
+        }
+        else{
+            res.status(404).json(`User not found!`);
+        }
+    }
+    else{
+        res.status(401).json(`You can Delete only your account!`);
+    }
+}
+
 // Forgot Password
 let otp;
 
@@ -92,6 +153,7 @@ const generateOtp = () => {;
     return otptemp;
 }
 
+// forgot Passoword
 exports.forgotPassword = async (req, res) => {
     let info;
     try {
