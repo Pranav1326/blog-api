@@ -49,7 +49,7 @@ exports.postCreateArticle = async (req, res, next) => {
 // Update an Article
 exports.updateArticle = async (req, res) => {
     const authUser = await userAuth(req);
-    if(authUser._id === req.body.userId && authUser.username === req.body.author){
+    if((authUser._id === req.body.userId && authUser.username === req.body.author) || (authUser.role === 'admin')){
         try{
             const updatedArticle = await Article.findByIdAndUpdate(req.params.id, {
                 $set: req.body
@@ -69,7 +69,7 @@ exports.updateArticle = async (req, res) => {
 exports.deleteArticle = async (req, res) => {
     const authUser = await userAuth(req);
     const user = await User.findOne({_id: req.body.userId});
-    if(authUser._id === req.body.userId && authUser.username === req.body.author && user.articles.includes(req.body.articleId)){
+    if((authUser._id === req.body.userId && authUser.username === req.body.author && user.articles.includes(req.body.articleId)) || (authUser.role === 'admin')){
         const article = await Article.findOne({_id : req.params.id});
         if(article){
             try{

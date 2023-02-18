@@ -15,20 +15,35 @@ var adminSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true,
-        min: 8
     },
     profilepic: {
         type: String,
         required: false,
-        default: ""
+        default: "",
     },
     articles: {
         type: Array,
-        default: []
+        default: [],
     },
     comments: {
         type: Array,
-        default: []
+        default: [],
+    },
+    name: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
+    work: {
+        type: String,
+    },
+    role: {
+        type: String,
+        default: 'admin',
     }
 },{timestamps: true});
 

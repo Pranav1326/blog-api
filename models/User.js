@@ -1,47 +1,51 @@
 const mongoose = require('mongoose');
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema({
-    username:{
+    username: {
         type: String,
         required: true,
         unique: true,
         index: true,
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true,
     },
-    password:{
+    password: {
         type: String,
-        required: true
+        required: true,
     },
     profilepic: {
         type: String,
         required: false,
-        default: ""
+        default: "",
     },
     articles: {
         type: Array,
-        default: []
+        default: [],
     },
     comments: {
         type: Array,
-        default: []
+        default: [],
     },
-    name:{
+    name: {
         type: String,
     },
-    location:{
+    location: {
         type: String,
     },
-    bio:{
+    bio: {
         type: String,
     },
-    work:{
+    work: {
         type: String,
     },
-},{timestamps: true});
+    role: {
+        type: String,
+        default: 'user',
+    }
+}, { timestamps: true });
 
 //Export the model
 module.exports = mongoose.model('User', userSchema);
