@@ -76,12 +76,12 @@ res: admin-user
 
 1. Create Article
 path: '/articles/create',
-req.data: auth-token, body.authorId, body{title, content, author, tags},
+req.data: auth-token, body{author, authorId,role, title, content, tags},
 res: new article 
 
 2. Update Article
 path: '/articles/update/:id',
-req.data: auth-token, body{userId, author}, params{articleid (article_id)}, article_details_to_change{title, content, tags},
+req.data: auth-token, body{authorId, author}, params{articleid (article_id)}, article_details_to_change{title, content, tags},
 res: updated article
 
 3. Delete Article

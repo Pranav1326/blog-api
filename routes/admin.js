@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 
-const Admin = require('../models/Admin');
 const adminController = require('../controllers/admin');
 const auth = require('../utils/auth');
 
@@ -21,6 +20,6 @@ router.delete('/delete/:id',auth , adminController.deleteAdmin);
 router.get('/:id', adminController.getAdmin); 
 
 // Fetch all Admins
-router.get('/getall', adminController.getAdmins);
+router.get('/', adminController.getAdmins);
 
 module.exports = router;    

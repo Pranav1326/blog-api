@@ -1,5 +1,7 @@
 const Admin = require('../models/Admin');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const auth = require('../utils/auth');
 
 // Register for Admin
 exports.postAdminRegister = async (req, res) => {
@@ -29,8 +31,8 @@ exports.postAdminRegister = async (req, res) => {
 exports.postAdminLogin = async (req, res) => {
     try{
         const admin = await Admin.findOne({username: req.body.username});
-        !admin && res.status(400).json('User does not exist!');
-
+        !admin && res.status(404).json('User does not exist!');
+        
         const validated = await bcrypt.compare(req.body.password, admin.password);
         !validated && res.status(400).json('Wrong credentials!');
 
@@ -39,7 +41,7 @@ exports.postAdminLogin = async (req, res) => {
         const token = jwt.sign(
             adminInfo,
             "RANDOM-TOKEN",
-            {expiresIn: "10m"}
+            {expiresIn: "1d"}
         );
         res.status(200).json({adminInfo, token});
     }
@@ -115,7 +117,10 @@ exports.getAdmin = async (req, res) => {
 exports.getAdmins = async (req, res) => {
     try {
         const admins = await Admin.find();
-        admins && res.status(200).json(admins);
+
+        !admins && res.status(404).json('Admins not found!');
+
+        res.status(200).json(admins);
     } catch (err) {
         res.status(500).json(err);
     }

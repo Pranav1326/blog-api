@@ -1,9 +1,7 @@
 const auth = require('../utils/auth');
 const userAuth = require('../utils/userAuth');
 const router = require('express').Router();
-const bcrypt = require('bcrypt');
 
-const User = require('../models/User');
 const userController = require('../controllers/user');
 
 // Create User
