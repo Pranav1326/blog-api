@@ -4,6 +4,9 @@ const commentController = require(`../controllers/comment`);
 // get all comments 
 router.get("/", commentController.getAllComments);
 
+// get all comments of articleId in params
+router.get("/article/:articleId", commentController.getAllCommentsOf);
+
 // get specific comment by id
 router.get("/:id", commentController.getComment);
 

@@ -2,6 +2,16 @@ const Article = require("../models/Article");
 const Comment = require(`../models/Comment`);
 const User = require("../models/User");
 
+exports.getAllCommentsOf = async (req, res) => {
+    const articleId = req.params.articleId;
+    try {
+        const articleComments = await Comment.find({articleId: articleId});
+        articleComments && res.status(200).json(articleComments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
 
 exports.getAllComments = async (req, res) => {
     try {
@@ -49,33 +59,16 @@ exports.postComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
     try {
         const id = req.params.id;
-        // const comment = await Comment.findByIdAndDelete({_id: id});
-        // if(comment){
+        const comment = await Comment.findByIdAndDelete({_id: id});
+        if(comment){
             const user = await User.findOne({_id: req.body.authorId});
-            const remainingCommentsUser = [...user.comments];
-            const indexOfCommentUser = remainingCommentsUser.indexOf(req.body._id);
-            // remainingCommentsUser.splice(indexOfCommentUser, 1);
-            console.log("Remaining Comments: ", remainingCommentsUser);
-            console.log("body id: ", req.body._id);
-            console.log("Index: ", indexOfCommentUser);
-            // const updatedUser = await User.findOneAndUpdate({_id: req.body.authorId},
-            //     {comments: remainingCommentsUser},
-            //     {new: true}
-            // );
-
-            const article = await Article.findOne({_id: req.body.articleId});
-            const remainingCommentArticle = [...article.comments];
-            const indexOfCommentArticle = remainingCommentArticle.indexOf(req.body.id);
-            // remainingCommentArticle.splice(indexOfCommentArticle, 1);
-            // const udpatedArticle = await Article.findOneAndUpdate({_id: req.body.articleId},
-            //     {comments: remainingCommentArticle},
-            //     {new: true}
-            // );
-            // comment && res.status(200).json({message: `Comment ${id} Deleted!`});
-        // }
-        // else{
-        //     res.status(404).json({message: "Comment not found!"});
-        // }
+            await User.updateOne({_id: req.body.authorId}, {$pull: {comments: id}});
+            await Article.updateOne({_id: req.body.articleId}, {$pull: {comments: id}});
+            comment && res.status(200).json({message: `Comment ${comment.comment} Deleted!`});
+        }
+        else{
+            res.status(404).json({message: "Comment not found!"});
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
