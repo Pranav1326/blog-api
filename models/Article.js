@@ -23,10 +23,11 @@ var articleSchema = new mongoose.Schema({
     },
     comments: {
         type: Array,
-        default: []
+        default: [],
     },
     image: {
-        type: String
+        type: String,
+        default: "https://blog-api-c8j7.onrender.com/images/blog.jpg",
     }
 },{timestamps: true});
 
