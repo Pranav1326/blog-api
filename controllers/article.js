@@ -148,7 +148,6 @@ exports.getArticles = async (req, res) => {
         else{
             articles = await Article.find();
         }
-
         if(!articles){
             !articles && res.status(400).json(`No Articles found!`);
         }
@@ -156,5 +155,19 @@ exports.getArticles = async (req, res) => {
     }
     catch(err){
         res.status(500).json(err);
+    }
+}
+
+exports.viewIncrement = async (req, res) => {
+    try {
+        const updatedArticle = await Article.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { viewCount: 1 }},
+            // {new: true}
+        );
+        res.status(200).json(updatedArticle);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
     }
 }

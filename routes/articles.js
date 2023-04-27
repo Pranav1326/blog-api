@@ -6,6 +6,9 @@ const articleController = require('../controllers/article');
 // Create an Article
 router.post('/create', auth, articleController.postCreateArticle);
 
+// Update View Count
+router.put('/incview/:id', articleController.viewIncrement);
+
 // Update an Article
 router.put('/update/:id', auth, articleController.updateArticle);
 

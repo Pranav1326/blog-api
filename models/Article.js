@@ -25,6 +25,10 @@ var articleSchema = new mongoose.Schema({
         type: Array,
         default: [],
     },
+    viewCount: {
+        type: Number,
+        default: 0,
+    },
     image: {
         type: String,
         default: "https://blog-api-c8j7.onrender.com/images/blog.jpg",
