@@ -76,7 +76,7 @@ res: admin-user
 
 1. Create Article
 path: '/articles/create',
-req.data: auth-token, body{author, authorId,role, title, content, tags},
+req.data: auth-token, body{author, authorId, role, title, content, tags, image}
 res: new article 
 
 2. Update Article
