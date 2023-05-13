@@ -33,7 +33,7 @@ app.post("/api/imageupload", upload.single('file'), (req, res) => {
   const uploadFile = req.file;
   console.log(uploadFile);
   try{
-    res.status(200).json({message: "File uploaded Successfully.", path:`${protocol}://${hostname}:${port}/${uploadFile.destination.split('/')[1]}/${uploadFile.filename}`});
+    res.status(200).json({message: "File uploaded Successfully.", path:`${protocol}://${hostname}/${uploadFile.destination.split('/')[1]}/${uploadFile.filename}`});
   }
   catch(err){
     res.status(500).json(err);
