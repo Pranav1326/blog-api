@@ -17,18 +17,23 @@ const PORT = process.env.PORT || 5000;
 const dbConnection = require('./utils/db');
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
+  destination: (req, file, callback) => {
+    callback(null, 'public/images');
   },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
+  filename: (req, file, callback) => {
+    callback(null, Date.now() + "-" + file.originalname);
   }
 });
 
-const upload = multer({storage: storage});
-app.post("/api/imageupload", upload.single("file"), (req, res) => {
+const upload = multer({ storage: storage });
+
+app.post("/api/imageupload", upload.single('file'), (req, res) => {
+  const { protocol, hostname } = req;
+  const port = process.env.PORT || PORT;
+  const uploadFile = req.file;
+  console.log(uploadFile);
   try{
-    res.status(200).json({message: "File uploaded Successfully.", path:`${window.location.origin}/images/${req.body.name}`});
+    res.status(200).json({message: "File uploaded Successfully.", path:`${protocol}://${hostname}:${port}/${uploadFile.destination.split('/')[1]}/${uploadFile.filename}`});
   }
   catch(err){
     res.status(500).json(err);
