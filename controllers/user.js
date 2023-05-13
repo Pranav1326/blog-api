@@ -107,7 +107,6 @@ exports.updateUser = async (req, res) => {
             const updatedUser = await User.findByIdAndUpdate(req.params.id, {
                 $set: req.body
             },{new: true});
-            console.log(updatedUser);
             res.status(200).json(updatedUser);
         }
         catch(err){
