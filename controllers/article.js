@@ -11,6 +11,7 @@ exports.postCreateArticle = async (req, res, next) => {
         try{
             const newArticle = new Article({
                 title: req.body.title,
+                description: req.body.description,
                 content: req.body.content,
                 author: req.body.author,
                 authorId: req.body.authorId,
