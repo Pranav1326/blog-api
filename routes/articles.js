@@ -6,6 +6,9 @@ const articleController = require('../controllers/article');
 // Create an Article
 router.post('/create', auth, articleController.postCreateArticle);
 
+// Find with Aggregation
+router.post('/related', articleController.find);
+
 // Update View Count
 router.put('/incview/:id', articleController.viewIncrement);
 
@@ -20,5 +23,6 @@ router.get('/:id', articleController.getArticle);
 
 // Fetch all the Articles
 router.get('/', articleController.getArticles);
+
 
 module.exports = router;

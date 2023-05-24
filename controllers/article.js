@@ -159,14 +159,26 @@ exports.getArticles = async (req, res) => {
     }
 }
 
+// Increment Views of Article
 exports.viewIncrement = async (req, res) => {
     try {
         const updatedArticle = await Article.findByIdAndUpdate(
             req.params.id,
             { $inc: { viewCount: 1 }},
-            // {new: true}
         );
         res.status(200).json(updatedArticle);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Related Articles
+exports.find = async (req, res) => {
+    const tags = req.body.tags;
+    try {
+        const articles = await Article.aggregate([{ $match: { "tags": { $in: tags } } }]);
+        articles && res.status(200).json(articles);
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
