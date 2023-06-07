@@ -6,8 +6,14 @@ const articleController = require('../controllers/article');
 // Create an Article
 router.post('/create', auth, articleController.postCreateArticle);
 
-// Find with Aggregation
+// Search Articles
+router.get('/search', articleController.searchArticles);
+
+// Related Articles
 router.post('/related', articleController.find);
+
+// Popular Articles
+router.get('/popular', articleController.popularArticles);
 
 // Update View Count
 router.put('/incview/:id', articleController.viewIncrement);

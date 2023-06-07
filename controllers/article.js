@@ -130,32 +130,23 @@ exports.getArticle = async (req, res) => {
 
 // Fetch all the articles
 exports.getArticles = async (req, res) => {
-    const username = req.query.user;
-    const tag = req.query.tag;
-    const title = req.query.title;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 5;
+    const skip = (page - 1) * pageSize;
+    const total = await Article.countDocuments();
+    const pages = Math.ceil(total/pageSize);
     try{
-        let articles; 
-        if(username){
-            articles = await Article.find({author: username});
-        }
-        else if(tag){
-            articles = await Article.find({tags: {
-                $in: [tag]
-            }});
-        }
-        else if(title){
-            articles = await Article.find({title});
-        }
-        else{
-            articles = await Article.find();
+        const articles = await Article.find().limit(pageSize).skip(skip);
+        if(page > pages){
+            res.status(404).json("No Articles found!");
         }
         if(!articles){
             !articles && res.status(400).json(`No Articles found!`);
         }
-        res.status(200).json(articles);
+        res.status(200).json({ page, pages, articles });
     }
     catch(err){
-        res.status(500).json(err);
+        res.status(500);
     }
 }
 
@@ -178,6 +169,29 @@ exports.find = async (req, res) => {
     const tags = req.body.tags;
     try {
         const articles = await Article.aggregate([{ $match: { "tags": { $in: tags } } }]);
+        articles && res.status(200).json(articles);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Popular Articles
+exports.popularArticles = async (req, res) => {
+    try {
+        const articles = await Article.find().sort({viewCount: 'desc'}).limit(3);
+        articles && res.status(200).json(articles);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Popular Articles
+exports.searchArticles = async (req, res) => {
+    const query = req.query.search;
+    try {
+        const articles = await Article.aggregate([{ $search: { index: "default", text: { query: query, path: { wildcard: "*" } } } }]);
         articles && res.status(200).json(articles);
     } catch (error) {
         console.log(error);
