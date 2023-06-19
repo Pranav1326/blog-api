@@ -1,0 +1,154 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Blog API",
+        "description": "Doeumentation of Blog REST API for Testing and Prototyping",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/tags": {
+            "get": {
+                "description": "List all Tags.",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched all Tags from API",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "objectid"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            },
+                                            "__V": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "example": {
+                                            "_id": "635bc5b97e3245471436ba9f",
+                                            "tag": "blog",
+                                            "__v": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error fetching from API.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tags/create": {
+            "post": {
+                "description": "Create new Tag.",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "tag",
+                        "type": "string",
+                        "required": true,
+                        "description": "Tag Name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created a new tag.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "objectid"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            },
+                                            "__V": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "example": {
+                                            "_id": "635bc5b97e3245471436ba9f",
+                                            "tag": "blog",
+                                            "__v": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error fetching from API",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tags/delete": {
+            "post": {
+                "description": "Delete a Tag.",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "tag",
+                        "type": "string",
+                        "required": true,
+                        "description": "Tag Name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted a tag.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "objectid"
+                                            },
+                                            "tag": {
+                                                "type": "string"
+                                            },
+                                            "__V": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "example": {
+                                            "_id": "635bc5b97e3245471436ba9f",
+                                            "tag": "blog",
+                                            "__v": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error fetching from API",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

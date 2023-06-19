@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const multer = require('multer');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 app.use(cors());
@@ -10,6 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use('/images', express.static('images'));
 app.use(express.json());
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 5000;
 
@@ -69,5 +72,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}/`);
 });
-
-// Test comment ssh

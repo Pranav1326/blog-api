@@ -5,9 +5,9 @@ const tagController = require('../controllers/tags');
 router.get('/', tagController.getTags);
 
 // Create tags
-router.post('/', tagController.postTags);
+router.post('/create', tagController.postTags);
 
 // Delete a tag
-router.delete('/', tagController.deleteTags);
+router.delete('/delete', tagController.deleteTags);
 
 module.exports = router;

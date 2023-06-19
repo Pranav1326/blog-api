@@ -33,6 +33,10 @@ var articleSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    published: {
+        type: Boolean,
+        default: false,
+    },
     image: {
         type: String,
         default: "https://blog-api-c8j7.onrender.com/images/blog.jpg",

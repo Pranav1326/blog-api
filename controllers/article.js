@@ -7,8 +7,8 @@ const Admin = require('../models/Admin');
 // Create an new article
 exports.postCreateArticle = async (req, res, next) => {
     const authUser = await userAuth(req);
-    if(authUser._id === req.body.authorId && authUser.username === req.body.author){
-        try{
+    if (authUser._id === req.body.authorId && authUser.username === req.body.author) {
+        try {
             const newArticle = new Article({
                 title: req.body.title,
                 description: req.body.description,
@@ -20,11 +20,11 @@ exports.postCreateArticle = async (req, res, next) => {
             });
             const article = await newArticle.save();
             const isNewTags = newArticle.tags.forEach(async (tag, i) => {
-                const foundTag = await Tags.findOne({tag});
-                if(foundTag){
+                const foundTag = await Tags.findOne({ tag });
+                if (foundTag) {
                     return;
                 }
-                else{
+                else {
                     const newTag = new Tags({
                         tag: tag
                     });
@@ -33,26 +33,26 @@ exports.postCreateArticle = async (req, res, next) => {
             });
             // isNewTags();
             const role = req.body.role;
-            if(role === 'user'){
-                const user = await User.findOne({_id: req.body.authorId});
+            if (role === 'user') {
+                const user = await User.findOne({ _id: req.body.authorId });
                 const updatedUser = await User.findByIdAndUpdate(authUser._id, {
-                    articles : [...user.articles ,article._id]
-                },{new: true});
+                    articles: [...user.articles, article._id]
+                }, { new: true });
             }
-            else if(role === 'admin'){
-                const admin = await Admin.findOne({_id: req.body.authorId});
+            else if (role === 'admin') {
+                const admin = await Admin.findOne({ _id: req.body.authorId });
                 const updatedAdmin = await Admin.findByIdAndUpdate(authUser._id, {
-                    articles : [...admin.articles ,article._id]
-                },{new: true});
+                    articles: [...admin.articles, article._id]
+                }, { new: true });
             }
             res.status(200).json(article);
         }
-        catch(err){
-            res.status(500).json({message: "Can't create article!", err});
+        catch (err) {
+            res.status(500).json({ message: "Can't create article!", err });
         }
     }
-    else{
-        res.status(401).json({message: "Invalid userId or username!"});
+    else {
+        res.status(401).json({ message: "Invalid userId or username!" });
     }
     next();
 }
@@ -60,18 +60,18 @@ exports.postCreateArticle = async (req, res, next) => {
 // Update an Article
 exports.updateArticle = async (req, res) => {
     const authUser = await userAuth(req);
-    if((authUser._id === req.body.userId && authUser.username === req.body.author) || (authUser.role === 'admin')){
-        try{
+    if ((authUser._id === req.body.userId && authUser.username === req.body.author) || (authUser.role === 'admin')) {
+        try {
             const updatedArticle = await Article.findByIdAndUpdate(req.params.id, {
                 $set: req.body
-            },{new: true});
+            }, { new: true });
             res.status(200).json(updatedArticle);
         }
-        catch(err){
+        catch (err) {
             res.status(500).json(err);
         }
     }
-    else{
+    else {
         res.status(401).json(`Not Authorized!`);
     }
 }
@@ -80,50 +80,50 @@ exports.updateArticle = async (req, res) => {
 exports.deleteArticle = async (req, res) => {
     const authUser = await userAuth(req);
     const role = req.body.role;
-    if((authUser._id === req.body.authorId && authUser.username === req.body.author) || (authUser.role === 'admin')){
-        const article = await Article.findOne({_id : req.params.id});
-        if(article){
-            try{
+    if ((authUser._id === req.body.authorId && authUser.username === req.body.author) || (authUser.role === 'admin')) {
+        const article = await Article.findOne({ _id: req.params.id });
+        if (article) {
+            try {
                 await article.delete();
                 // Updates author's data
-                const user = await User.findOne({_id: article.authorId});
-                const admin = await Admin.findOne({_id: article.authorId});
-                if(user){
-                    await User.updateOne({_id: article.authorId}, {$pull: {articles: article._id}});
+                const user = await User.findOne({ _id: article.authorId });
+                const admin = await Admin.findOne({ _id: article.authorId });
+                if (user) {
+                    await User.updateOne({ _id: article.authorId }, { $pull: { articles: article._id } });
                 }
-                else if(admin){
-                    await Admin.updateOne({_id: article.authorId}, {$pull: {articles: article._id}});
+                else if (admin) {
+                    await Admin.updateOne({ _id: article.authorId }, { $pull: { articles: article._id } });
                 }
-                else if(user === null || user === undefined || admin === null || admin === undefined){
+                else if (user === null || user === undefined || admin === null || admin === undefined) {
                     res.status(200).json(`Article ${article.title} deleted! Article's author is not found!`);
                 }
                 res.status(200).json(`Article ${article.title} deleted!`);
             }
-            catch(err){
+            catch (err) {
                 res.status(500);
             }
         }
-        else{
+        else {
             res.status(404).json(`Article not found!`);
         }
     }
-    else{
+    else {
         res.status(401).json(`You can Delete only your Article!`);
     }
 }
 
 // Fetch a single Article
 exports.getArticle = async (req, res) => {
-    try{
+    try {
         const article = await Article.findById(req.params.id)
-        .then(foundArticle => {
-            res.status(200).json(foundArticle);
-        })
-        .catch(err => {
-            res.status(500).json(`Article Not Found!`);
-        });
+            .then(foundArticle => {
+                res.status(200).json(foundArticle);
+            })
+            .catch(err => {
+                res.status(500).json(`Article Not Found!`);
+            });
     }
-    catch(err) {
+    catch (err) {
         res.status(500).json(err);
     }
 }
@@ -134,18 +134,18 @@ exports.getArticles = async (req, res) => {
     const pageSize = 5;
     const skip = (page - 1) * pageSize;
     const total = await Article.countDocuments();
-    const pages = Math.ceil(total/pageSize);
-    try{
-        const articles = await Article.find().limit(pageSize).skip(skip);
-        if(page > pages){
+    const pages = Math.ceil(total / pageSize);
+    try {
+        const articles = await Article.find({ published: true }).limit(pageSize).skip(skip);
+        if (page > pages) {
             res.status(404).json("No Articles found!");
         }
-        if(!articles){
+        if (!articles) {
             !articles && res.status(400).json(`No Articles found!`);
         }
         res.status(200).json({ page, pages, articles });
     }
-    catch(err){
+    catch (err) {
         res.status(500);
     }
 }
@@ -155,7 +155,7 @@ exports.viewIncrement = async (req, res) => {
     try {
         const updatedArticle = await Article.findByIdAndUpdate(
             req.params.id,
-            { $inc: { viewCount: 1 }},
+            { $inc: { viewCount: 1 } },
         );
         res.status(200).json(updatedArticle);
     } catch (error) {
@@ -179,7 +179,7 @@ exports.find = async (req, res) => {
 // Popular Articles
 exports.popularArticles = async (req, res) => {
     try {
-        const articles = await Article.find().sort({viewCount: 'desc'}).limit(3);
+        const articles = await Article.find({ published: true }).sort({ viewCount: 'desc' }).limit(3);
         articles && res.status(200).json(articles);
     } catch (error) {
         console.log(error);
@@ -187,12 +187,135 @@ exports.popularArticles = async (req, res) => {
     }
 }
 
-// Popular Articles
+// Search Articles
 exports.searchArticles = async (req, res) => {
     const query = req.query.search;
     try {
         const articles = await Article.aggregate([{ $search: { index: "default", text: { query: query, path: { wildcard: "*" } } } }]);
         articles && res.status(200).json(articles);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Save/Unpublis an Article
+exports.saveArticle = async (req, res) => {
+    const newTitle = req.body.title;
+    const articleExist = await Article.find({ title: newTitle });
+    if (articleExist[0].title === newTitle) {
+        try {
+            const savedArticle = await Article.findByIdAndUpdate(articleExist[0]._id, {
+                $set: req.body
+            }, { new: true });
+            res.status(200).json(savedArticle);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
+    }
+    else {
+        const authUser = await userAuth(req);
+        if (authUser._id === req.body.authorId && authUser.username === req.body.author) {
+            try {
+                const newArticle = new Article({
+                    title: req.body.title,
+                    description: req.body.description,
+                    content: req.body.content,
+                    author: req.body.author,
+                    authorId: req.body.authorId,
+                    tags: req.body.tags,
+                    image: req.body.image
+                });
+                const article = await newArticle.save();
+                const role = req.body.role;
+                if (role === 'user') {
+                    const user = await User.findOne({ _id: req.body.authorId });
+                    const updatedUser = await User.findByIdAndUpdate(authUser._id, {
+                        articles: [...user.articles, article._id]
+                    }, { new: true });
+                }
+                else if (role === 'admin') {
+                    const admin = await Admin.findOne({ _id: req.body.authorId });
+                    const updatedAdmin = await Admin.findByIdAndUpdate(authUser._id, {
+                        articles: [...admin.articles, article._id]
+                    }, { new: true });
+                }
+                res.status(200).json(article);
+            }
+            catch (err) {
+                res.status(500).json({ message: "Can't create article!", err });
+            }
+        }
+        else {
+            res.status(401).json({ message: "Invalid userId or username!" });
+        }
+    }
+}
+
+// Get Unpublished Articles
+exports.getUnpublishedArticles = async (req, res) => {
+    try {
+        const articles = await Article.find({ published: false });
+        articles && res.status(200).json(articles);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Make Article Unpublished
+exports.makeArticleUnpublish = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const foundArticle = await Article.find({ _id: id });
+        if(foundArticle[0].published === false){
+            res.status(201).json("Article is Already Unpublished!");
+        }
+        if(foundArticle[0].published === true){
+            const authUser = await userAuth(req);
+            if (authUser._id === req.body.authorId && authUser.username === req.body.author) {
+                const updatedArticle = await Article.findByIdAndUpdate({ _id: id }, {
+                    published: false
+                }, { new: true });
+                res.status(200).json(`${updatedArticle.title} article unpublished.`); 
+            }
+            else {
+                res.status(401).json("Not Authorised!");
+            }
+        }
+        else{
+            res.status(404);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+// Make Article Published
+exports.makeArticlePublish = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const foundArticle = await Article.find({ _id: id });
+        if(foundArticle[0].published === true){
+            res.status(201).json("Article is Already Published!");
+        }
+        if(foundArticle[0].published === false){
+            const authUser = await userAuth(req);
+            if (authUser._id === req.body.authorId && authUser.username === req.body.author) {
+                const updatedArticle = await Article.findByIdAndUpdate({ _id: id }, {
+                    published: true
+                }, { new: true });
+                res.status(200).json(`${updatedArticle.title} article published successfully.`);
+            }
+            else {
+                res.status(401).json("Not Authorised!");
+            }
+        }
+        else{
+            res.status(404);
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
