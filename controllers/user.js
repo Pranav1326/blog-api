@@ -3,6 +3,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const userAuth = require('../utils/userAuth');
+const dotenv = require('dotenv').config();
 
 let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -90,7 +91,7 @@ exports.postUserLogin = async (req, res) => {
         const {password, ...userInfo} = user._doc;
         const token = jwt.sign(
             userInfo,
-            "RANDOM-TOKEN"
+            process.env.TOKEN_KEY
         );
         res.status(200).json({userInfo, token});
     }
@@ -187,10 +188,39 @@ exports.forgotPassword = async (req, res) => {
     }
 }
 
+// Change Password
+exports.changePassword = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const authUser = await userAuth(req);
+        if(authUser._id === userId){
+            const user = await User.findOneAndUpdate({ _id: userId });
+            !user && res.status(404).json('User does not exist!');
+            
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            
+            if(user){
+                const updatedUser = await User.findByIdAndUpdate(user._id, {
+                    $set: req.body,
+                    password: hashedPassword
+                },{new: true});
+                updatedUser && res.status(200).json("Password Changed Successfully");
+            }
+        }
+        else{
+            res.status(401).json("Not Authorised!");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
 // Reset Password
 exports.resetPassword = async (req, res) => {
     try {
-        const user = await User.findOne({email: req.body.email});
+        const user = await User.findOne({ email: req.body.email });
         !user && res.status(404).json('User does not exist!');
         
         const salt = await bcrypt.genSalt(10);

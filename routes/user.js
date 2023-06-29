@@ -1,5 +1,4 @@
 const auth = require('../utils/auth');
-const userAuth = require('../utils/userAuth');
 const router = require('express').Router();
 
 const userController = require('../controllers/user');
@@ -16,11 +15,14 @@ router.post('/forgotpassword', userController.forgotPassword);
 // otp auth
 router.post('/otpauth', userController.otpAuth);
 
+// Change Password
+router.post('/changepassword', auth, userController.changePassword);
+
 // Reset Forgot Password
 router.put('/resetpassword', userController.resetPassword);
 
 // UPDATE User
-router.put('/update/:id',auth, userController.updateUser);
+router.put('/update/:id', auth, userController.updateUser);
 
 // DELETE User
 router.delete('/delete/:id', auth, userController.deleteUser);
