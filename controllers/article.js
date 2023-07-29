@@ -168,7 +168,7 @@ exports.viewIncrement = async (req, res) => {
 exports.find = async (req, res) => {
     const tags = req.body.tags;
     try {
-        const articles = await Article.aggregate([{ $match: { "tags": { $in: tags } } }]);
+        const articles = await Article.aggregate([{ $match: { "tags": { $in: tags } } }, { $match: { published: true } }]);
         articles && res.status(200).json(articles);
     } catch (error) {
         console.log(error);
@@ -191,7 +191,7 @@ exports.popularArticles = async (req, res) => {
 exports.searchArticles = async (req, res) => {
     const query = req.query.search;
     try {
-        const articles = await Article.aggregate([{ $search: { index: "default", text: { query: query, path: { wildcard: "*" } } } }]);
+        const articles = await Article.aggregate([ { $search: { index: "default", text: { query: query, path: { wildcard: "*" } } } }, {$match: { published: true }}]);
         articles && res.status(200).json(articles);
     } catch (error) {
         console.log(error);
