@@ -136,7 +136,7 @@ exports.getArticles = async (req, res) => {
     const total = await Article.countDocuments();
     const pages = Math.ceil(total / pageSize);
     try {
-        const articles = await Article.find({ published: true }).limit(pageSize).skip(skip);
+        const articles = await Article.find({ published: true }).sort({ createdAt: -1 }).limit(pageSize).skip(skip);
         if (page > pages) {
             res.status(404).json("No Articles found!");
         }
