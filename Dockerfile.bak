@@ -4,8 +4,8 @@ COPY package*.json ./
 
 WORKDIR /opt/server/backend-test
 
-COPY . /opt/server/backend-test/
+COPY . .
 
 RUN npm install
-EXPOSE 5000
-CMD [ "node", "app.js" ]
+EXPOSE 8080
+CMD [ "node", "index.js" ]
