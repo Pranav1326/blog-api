@@ -39,7 +39,7 @@ var articleSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: "https://drive.google.com/uc?id=1ZaDATIONGfu8RsjwOEkwGMtoHk4uMuWi",
+        default: "https://pranav1326.github.io/images/blog-cover.jpg",
     }
 },{timestamps: true});
 

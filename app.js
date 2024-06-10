@@ -14,7 +14,7 @@ app.use('/images', express.static('images'));
 app.use(express.json());
 app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 // DB connection
 const dbConnection = require('./utils/db');
