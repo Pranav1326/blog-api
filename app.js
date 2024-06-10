@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require('cors');
 const multer = require('multer');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerFile = require('./swagger-output.json');
 
 const app = express();
 app.use(cors());
@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use('/images', express.static('images'));
 app.use(express.json());
-app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 5050;
 
@@ -49,20 +48,33 @@ const articleRoute = require('./routes/articles');
 const tagRoute = require('./routes/tags');
 const commentRoute = require('./routes/comment');
 
+// Documentation
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 // User route
-app.use("/api/user", userRoute);
+app.use("/api/user", userRoute
+// #swagger.tags = ["User"]
+);
 
 // Admin route
-app.use("/api/admin", adminRoute);
+app.use("/api/admin", adminRoute
+// #swagger.tags = ["Admin"]
+);
 
 // Article route
-app.use("/api/articles", articleRoute);
+app.use("/api/articles", articleRoute
+// #swagger.tags = ["Articles"]
+);
 
 // Tag route
-app.use("/api/tags", tagRoute);
+app.use("/api/tags", tagRoute
+// #swagger.tags = ["Tags"]
+);
 
 // Comment route
-app.use(`/api/comment`, commentRoute);
+app.use(`/api/comment`, commentRoute
+// // #swagger.tags = ["Comments"]
+);
 
 // Home Test Route
 app.get("/", (req, res) => {
